@@ -22,6 +22,7 @@ Build MNFS in `build` folder:
 ```bash
 cmake -S . -B build \
       -DCMAKE_CXX_COMPILER=clang++-14 -DCMAKE_C_COMPILER=clang-14 \
-      -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      -DSHUFFLE_METHOD=<method>
 cmake --build build -j
 ```

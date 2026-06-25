@@ -90,12 +90,32 @@ index 49dd96451..44d126465 100644
  
  # Generate a pkg-config file so that downstream projects that don't use
  # CMake can depend on folly using pkg-config.
+diff --git a/folly/logging/CMakeLists.txt b/folly/logging/CMakeLists.txt
+index af5cb4c48..af752cb26 100644
+--- a/folly/logging/CMakeLists.txt
++++ b/folly/logging/CMakeLists.txt
+@@ -138,6 +138,7 @@ folly_add_library(
+     Logger.cpp
+     LoggerDB.cpp
+     ObjectToString.cpp
++    MnfsLogFormatter.cpp
+     StandardLogHandler.cpp
+     StandardLogHandlerFactory.cpp
+     StreamHandlerFactory.cpp
+@@ -160,6 +161,7 @@ folly_add_library(
+     Logger.h
+     LoggerDB.h
+     ObjectToString.h
++    MnfsLogFormatter.h
+     StandardLogHandler.h
+     StandardLogHandlerFactory.h
+     StreamHandlerFactory.h
 diff --git a/folly/logging/MnfsLogFormatter.cpp b/folly/logging/MnfsLogFormatter.cpp
 new file mode 100644
-index 000000000..0207c2d43
+index 000000000..a6251b9f0
 --- /dev/null
 +++ b/folly/logging/MnfsLogFormatter.cpp
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,146 @@
 +/*
 + * Copyright (c) Meta Platforms, Inc. and affiliates.
 + *
@@ -112,6 +132,7 @@ index 000000000..0207c2d43
 + * limitations under the License.
 + */
 +
++#include <ctime>
 +#include <fmt/chrono.h>
 +#include <fmt/core.h>
 +#include <folly/logging/LogMessage.h>
@@ -136,8 +157,11 @@ index 000000000..0207c2d43
 +  return "FATAL";
 +}
 +
-+auto localtime(std::chrono::system_clock::time_point ts) {
-+  return fmt::localtime(std::chrono::system_clock::to_time_t(ts));
++std::tm localtime(std::chrono::system_clock::time_point ts) {
++  std::time_t t = std::chrono::system_clock::to_time_t(ts);
++  std::tm tm{};
++  ::localtime_r(&t, &tm);
++  return tm;
 +}
 +} // namespace
 +

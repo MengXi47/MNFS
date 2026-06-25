@@ -81,7 +81,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
+    # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines-ts")
     set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
     add_link_options(-fuse-ld=lld)
     # Do not build with libc++ (LLVM's implementation of the C++ standard library) in fdb
@@ -107,6 +107,14 @@ include(cmake/CompileFlags.cmake)
 store_compile_flags()
 add_subdirectory("third_party/fmt" EXCLUDE_FROM_ALL)
 restore_compile_flags()
+set(FASTFLOAT_INCLUDE_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fast_float/include"
+    CACHE PATH "Path to bundled fast_float headers" FORCE)
+restore_compile_flags()
 set(FOLLY_NO_EXCEPTION_TRACER ON)
 add_subdirectory("third_party/folly" EXCLUDE_FROM_ALL)
 restore_compile_flags()
+
+include(cmake/Target.cmake)
+
+add_subdirectory(src)
